@@ -22,7 +22,7 @@
   },
   "husky":{
     "hooks": {
-      "pre-push": "coss-env-shell .scripts/git_commands/pre-push.sh"
+      "pre-push": "cross-env-shell .scripts/git_commands/pre-push.sh"
     }
   },
   "devDependencies": {
