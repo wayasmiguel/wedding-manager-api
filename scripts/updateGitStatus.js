@@ -17,7 +17,7 @@ module.exports = (request, response) => {
         gitStatus.commit = {
             message: commit.message,
             url: commit.url,
-            date: moment.unix(commit.timestamp).format("DD/MM/YYYY hh:mm:ss a")
+            date: moment(commit.timestamp).format("DD/MM/YYYY hh:mm:ss a")
         };
         gitStatus.user = {
             name: data.user_name,

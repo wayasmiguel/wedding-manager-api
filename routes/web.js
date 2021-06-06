@@ -17,8 +17,7 @@ router.get("/", (_, response) => {
 });
 
 router.get("/status", (_, response) => {
-    let {name, version, description} = require("../package.json");
-    return response.json({name, version, description});
+    return response.json(require("../git-status.json"));
 });
 
 router.post("/update-status", require("../scripts/updateGitStatus"));
