@@ -3,7 +3,6 @@
 const fs = require("fs");
 const path = require("path");
 const moment = require("moment-timezone");
-const datetime = moment().tz("America/Mexico_City");
 const gitStatusPath = path.resolve('./git-status.json'); 
 
 module.exports = (request, response) => {
@@ -17,7 +16,7 @@ module.exports = (request, response) => {
         gitStatus.commit = {
             message: commit.message,
             url: commit.url,
-            date: datetime(commit.timestamp).format("DD/MM/YYYY hh:mm:ss a")
+            date: moment(commit.timestamp).tz("America/Mexico_City").format("DD/MM/YYYY hh:mm:ss a")
         };
         gitStatus.user = {
             name: data.user_name,
@@ -35,7 +34,7 @@ module.exports = (request, response) => {
                 commit: {
                     message: commit.message,
                     url: commit.url,
-                    date: datetime(commit.timestamp).format("DD/MM/YYYY hh:mm:ss a")
+                    date: moment(commit.timestamp).tz("America/Mexico_City").format("DD/MM/YYYY hh:mm:ss a")
                 },
                 user: {
                     name: data.user_name,
