@@ -44,5 +44,10 @@ module.exports = (request, response) => {
         );
     }
 
-    return response.status(200);
+    global.io.emit('getAppData', gitStatusPath);
+
+    return response.status(200).json({
+        code: 200,
+        msg: "Notify received successfully"
+    });
 }
