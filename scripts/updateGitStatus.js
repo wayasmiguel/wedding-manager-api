@@ -4,7 +4,6 @@ const fs = require("fs");
 const path = require("path");
 const moment = require("moment-timezone");
 const gitStatusPath = path.resolve('./git-status.json'); 
-// const {name, version, description} = require("../../../package.json");
 
 module.exports = (request, response) => {
     let data = request.body;
@@ -35,7 +34,7 @@ module.exports = (request, response) => {
                 commit: {
                     message: commit.message,
                     url: commit.url,
-                    date: commit.timestamp
+                    date: moment(commit.timestamp).format("DD/MM/YYYY hh:mm:ss a")
                 },
                 user: {
                     name: data.user_name,
@@ -45,8 +44,5 @@ module.exports = (request, response) => {
         );
     }
 
-    return response.status(200).json({
-        code: 200,
-        msg: "Notify received successfully"
-    });
+    return response.status(200);
 }

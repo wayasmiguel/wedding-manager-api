@@ -70,7 +70,7 @@ class Server{
             });
 
             // await this.db.connect();
-            // this.cron();
+            this.cron();
         }
         catch(error){
             console.log("Something went wrong trying to initialize the server :(");

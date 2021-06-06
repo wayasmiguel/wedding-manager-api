@@ -45,10 +45,21 @@ class Cron{
         });
     }
 
+    hours(active = true){
+        cron.schedule("* */1 * * *", () => {
+            var time = datetime.format('hh:mm:ss a');  
+            console.log("Running a task every hour " + time);
+        }, { 
+            scheduled: active, 
+            timezone: timezone
+        });
+    }
+
     initialize(){
         try{
             this.seconds(false);
             this.minutes(false);
+            this.hours();
 
             console.log(`Cron jobs initialized successfully`);
         }
