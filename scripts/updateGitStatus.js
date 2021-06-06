@@ -45,7 +45,7 @@ module.exports = (request, response) => {
         );
     }
 
-    global.io.emit('getAppData', require("../git-status.json"));
+    global.io.emit('getAppData', JSON.parse(fs.readFileSync(gitStatusPath)));
 
     return response.status(200).json({
         code: 200,
