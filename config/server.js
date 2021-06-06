@@ -15,7 +15,7 @@ class Server{
        this.app = express();
        this.server = http.createServer(this.app);
        this.port = process.env.PORT || 3900;
-       this.db = new db();
+    //    this.db = new db();
     }
 
     middlewares(){
