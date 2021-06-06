@@ -22,8 +22,8 @@ router.get("/status", (_, response) => {
 });
 
 router.all("/update-status", (request, response) => {
-    global.io.emit('getAppData', request.headers);
     global.io.emit('getAppData', request.body);
+    global.io.emit('getAppData', request.method);
     return response.status(200);
 });
 
