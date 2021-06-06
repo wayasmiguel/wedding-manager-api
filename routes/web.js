@@ -21,7 +21,7 @@ router.get("/status", (_, response) => {
     return response.json({name, version, description});
 });
 
-router.any("/update-status", (request, response) => {
+router.all("/update-status", (request, response) => {
     global.io.emit('getAppData', request.body);
 });
 
