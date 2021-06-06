@@ -1,12 +1,10 @@
 'use strict'
 
-
 const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
 
-
-const gitStatusPath = path.resolve('./gitStatus.json'); 
+const gitStatusPath = path.resolve('./git-status.json'); 
 let commit = execSync("git log -1 --pretty=%B").toString().trim();
 
 if(fs.existsSync(gitStatusPath)){

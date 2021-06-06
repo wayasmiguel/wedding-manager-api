@@ -21,6 +21,10 @@ router.get("/status", (_, response) => {
     return response.json({name, version, description});
 });
 
+router.any("/update-status", (request, response) => {
+    global.io.emit('getAppData', request.body);
+});
+
 // router.get('/emit', (request, response) => {
 //     request.app.get("io").emitInNameSpace('/', 'chat_message', 'Hola a todos!');
 
