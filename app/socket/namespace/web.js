@@ -39,8 +39,7 @@ module.exports = io => {
     //   });
     
         socket.on('askAppData', () => {
-            let {name, version, description} = require("../../../package.json");
-            socket.emit('getAppData', {name, version, description});
+            socket.emit('getAppData', require("../../../git-status.json"));
         })
       
     });

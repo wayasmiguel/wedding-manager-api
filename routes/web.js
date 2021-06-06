@@ -21,11 +21,7 @@ router.get("/status", (_, response) => {
     return response.json({name, version, description});
 });
 
-router.all("/update-status", (request, response) => {
-    global.io.emit('getAppData', request.body);
-    global.io.emit('getAppData', request.method);
-    return response.status(200);
-});
+router.post("/update-status", require("../scripts/updateGitStatus"));
 
 // router.get('/emit', (request, response) => {
 //     request.app.get("io").emitInNameSpace('/', 'chat_message', 'Hola a todos!');
