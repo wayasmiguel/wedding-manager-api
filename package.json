@@ -23,7 +23,7 @@
   "private": true,
   "husky":{
     "hooks": {
-      "pre-push": ".scripts/git_commands/pre-push.sh"
+      "pre-push": "node ../updateGitStatus.js"
     }
   },
   "devDependencies": {

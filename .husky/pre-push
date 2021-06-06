@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-.scripts/git_commands/pre-push.sh
+node ../updateGitStatus.js
