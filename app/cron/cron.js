@@ -21,6 +21,10 @@ const timezone = "America/Mexico_City";
 const datetime = moment().tz(timezone);
 
 class Cron{
+    constructor(){
+        this.initialize();
+    }
+    
     seconds(active = true){
         cron.schedule("* * * * * *", () => {
             var time = datetime.format('dddd D [de] MMMM [del] YYYY, hh:mm:ss a'); 
@@ -49,7 +53,7 @@ class Cron{
             console.log(`Cron jobs initialized successfully`);
         }
         catch(error){
-            console.log("Something went wrong trying to initialize the server");
+            console.log("Something went wrong trying to initialize cron jobs");
             console.log(error);
         }
     }
