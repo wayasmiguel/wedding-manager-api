@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "updateStatus": "node scripts/updateGitStatus.js"
+    "updateStatus": "node scripts/updateGitStatus.js",
+    "prepare": "husky install"
   },
   "author": "Miguel Wayas",
   "license": "MIT",
