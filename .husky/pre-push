@@ -1,0 +1,4 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+coss-env-shell .scripts/git_commands/pre-push.sh
