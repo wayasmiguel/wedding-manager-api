@@ -17,7 +17,15 @@ router.get("/", (_, response) => {
 });
 
 router.get("/status", (_, response) => {
-    return response.json(require("../git-status.json"));
+    try{
+        response.json(require("../git-status.json"));
+    }
+    catch(error){
+        response.json({
+            code: 200,
+            msg: "Git status file haven't been created yet"
+        });
+    }
 });
 
 router.post("/update-status", require("../scripts/updateGitStatus"));

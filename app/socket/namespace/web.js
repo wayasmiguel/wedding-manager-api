@@ -39,7 +39,12 @@ module.exports = io => {
     //   });
     
         socket.on('askAppData', () => {
-            socket.emit('getAppData', require("../../../git-status.json"));
+            try{
+                socket.emit('getAppData', require("../../../git-status.json"));
+            }
+            catch(error){
+                console.log(error);
+            }
         })
       
     });
