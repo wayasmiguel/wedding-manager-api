@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "updateStatus": "node scripts/updateGitStatus.js"
   },
   "author": "Miguel Wayas",
   "license": "MIT",
@@ -23,8 +24,10 @@
   "private": true,
   "husky":{
     "hooks": {
-      "pre-commit": "node ../updateGitStatus.js",
-      "pre-push": "node ../updateGitStatus.js"
+      "applypatch-msg”: 'echo \"[Husky] applypatch-msg\"",
+    "pre-applypatch”: 'echo \"[Husky] pre-applypatch\"",
+    "post-applypatch”: 'echo \"[Husky] post-applypatch\"",
+    "pre-commit”: "echo \"[Husky] pre-commit\""
     }
   },
   "devDependencies": {
