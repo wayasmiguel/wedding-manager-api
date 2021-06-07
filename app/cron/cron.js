@@ -59,7 +59,7 @@ class Cron{
         try{
             this.seconds(false);
             this.minutes(false);
-            this.hours();
+            this.hours(false);
 
             console.log(`Cron jobs initialized successfully`);
         }

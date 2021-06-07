@@ -43,6 +43,7 @@ class Server{
 
     routing(){
         this.app.use('/', require('../routes/web'));
+        this.app.use('/api', require("../app/http/middlewares/verifyToken"), require('../routes/api'));
     }
 
     socket(server){
@@ -70,7 +71,7 @@ class Server{
             });
 
             // await this.db.connect();
-            this.cron();
+            // this.cron();
         }
         catch(error){
             console.log("Something went wrong trying to initialize the server :(");

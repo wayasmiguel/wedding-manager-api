@@ -10,7 +10,7 @@ const socketIo = require('socket.io');
 
 class SocketService {
 
-  constructor(server) {
+  constructor(server){
     this.io = socketIo(server);
 
     require('./namespace/web')(this.io);
@@ -20,35 +20,35 @@ class SocketService {
   } 
 
   emit(event, data) {
-    if(data)
+    if(event && data)
       this.io.emit(event, data);
   }
 
   emitBroadcast(event, data) {
-    if(data)
-      this.io.emit(event, data);
+    if(event && data)
+      this.io.broadcast.emit(event, data);
   }
 
   emitInNameSpace(namespace, event, data) {
-    if(data)
+    if(namespace && event && data)
       this.io.of(namespace).emit(event, data);
   }
 
   emitInNameSpaceBroadcast(namespace, event, data) {
-    if(data)
-      this.io.of(namespace).emit(event, data);
+    if(namespace && event && data)
+      this.io.of(namespace).broadcast.emit(event, data);
   }
 
   //emitToRoom
   //emitToRoomBroadcast
 
   emitToUser(userId, event, data) {//userId = socketId
-    if(data)
+    if(userId && event && data)
       this.io.to(userId).emit(event, data);
   }
 
   emitInNameSpaceToUser(namespace, userId, event, data) {//userId = socketId
-    if(data)
+    if(namespace && userId && event && data)
       this.io.of(namespace).to(userId).emit(event, data);
   }
 

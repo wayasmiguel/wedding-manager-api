@@ -1,7 +1,7 @@
 {
   "name": "microservices",
   "version": "1.0.0",
-  "description": "Mongo DB, JWT, Socket.IO, Cron Jobs",
+  "description": "Mongo DB, JWT, Socket.IO, Cron Jobs, Email",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -10,13 +10,17 @@
   "author": "Miguel Wayas",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "emailjs-com": "^2.6.4",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
+    "express-group-routes": "^1.1.0",
     "jsonwebtoken": "^8.5.1",
     "moment-timezone": "^0.5.33",
     "mongoose": "^5.12.13",
+    "mongoose-autopopulate": "^0.14.0",
     "node-cron": "^2.0.3",
     "socket.io": "^2.4.1"
   },
