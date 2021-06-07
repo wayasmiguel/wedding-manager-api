@@ -6,11 +6,11 @@ module.exports = io => {
 
     web.on('connection', socket => {
         
-        console.log(`New user connected!`);
+        // console.log(`New user connected!`);
 
-        socket.on('disconnect', () => {
-            console.log(`User disconnected!`);
-        });
+        // socket.on('disconnect', () => {
+        //     console.log(`User disconnected!`);
+        // });
     
         socket.on('askAppData', () => {
             try{
