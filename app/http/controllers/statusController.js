@@ -3,12 +3,12 @@
 const fs = require("fs");
 const path = require("path");
 const moment = require("moment-timezone");
-const gitStatusPath = path.resolve('../../git-status.json'); 
+const gitStatusPath = path.resolve('./git-status.json'); 
 
 const statusController = {
     getStatus: (_, response) => {
         try{
-            return response.json(fs.readFileSync(gitStatusPath));
+            return response.json(JSON.parse(fs.readFileSync(gitStatusPath)));
         }
         catch(error){
             return response.json({
