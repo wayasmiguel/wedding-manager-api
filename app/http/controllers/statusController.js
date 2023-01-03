@@ -19,20 +19,22 @@ const statusController = {
     },
     updateStatus: (request, response) => {
         let data = request.body;
+        const commit = data.commits[0];
     
         if(fs.existsSync(gitStatusPath)){
             let gitStatus = JSON.parse(fs.readFileSync(gitStatusPath));
     
-            gitStatus.branch = data.repository.default_branch;
+            gitStatus.branch = data.base_ref.split("/")[2];
             gitStatus.commit = {
-                message: data.repository.description,
-                url: data.repository.commits_url,
-                date: moment(data.created_at).tz("America/Mexico_City").format("DD/MM/YYYY hh:mm:ss a")
+                message: commit.message,
+                url: commit.url,
+                date: moment(commit.timestamp).tz("America/Mexico_City").format("DD/MM/YYYY hh:mm:ss a")
             };
             gitStatus.user = {
-                name: data.sender.login,
-                username: data.sender.login
+                name: commit.author.name,
+                username: commit.author.username
             };
+            gitStatus.modified = commit.modified;
     
             fs.writeFileSync(gitStatusPath, 
                 JSON.stringify(gitStatus)
@@ -41,16 +43,17 @@ const statusController = {
         else{
             fs.appendFileSync(gitStatusPath, 
                 JSON.stringify({
-                    branch: data.repository.default_branch,
+                    branch: data.base_ref.split("/")[2],
                     commit: {
-                        message: data.repository.description,
-                        url: data.repository.commits_url,
-                        date: moment(data.created_at).tz("America/Mexico_City").format("DD/MM/YYYY hh:mm:ss a")
+                        message: commit.message,
+                        url: commit.url,
+                        date: moment(commit.timestamp).tz("America/Mexico_City").format("DD/MM/YYYY hh:mm:ss a")
                     },
                     user: {
-                        name: data.sender.login,
-                        username: data.sender.login
-                    }
+                        name: commit.author,
+                        username: commit.author
+                    },
+                    modified: commit.modified
                 })
             );
         }
