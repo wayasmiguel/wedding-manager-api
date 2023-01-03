@@ -55,7 +55,7 @@ const statusController = {
             );
         }
     
-        // global.io.emit('getAppData', JSON.parse(fs.readFileSync(gitStatusPath)));
+        global.io.emit('getAppData', JSON.parse(fs.readFileSync(gitStatusPath)));
     
         return response.status(200).json({
             code: 200,

@@ -17,7 +17,7 @@ class DB{
                 }
             }
             else{
-                this.destiny = `mongodb+srv://${process.env.USER_DB}:${process.env.PASSWORD_DB}${process.env.CLUSTER}/${process.env.DATABASE}?retryWrites=true&w=majority`;
+                this.destiny = `mongodb+srv://${process.env.USER_DB}:${process.env.PASSWORD_DB}@${process.env.CLUSTER}/${process.env.DATABASE}?retryWrites=true&w=majority`;
             }
         }
         else{
