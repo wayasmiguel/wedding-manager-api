@@ -26,8 +26,10 @@ class Server{
         this.app.use(fileUpload());
 
         this.app.use((request, response, next) => {
-            const allowedOrigins = ["https://aleymiguel.netlify.app/", "wedding-manager-api.onrender.com", "187.190.190.236"];
-            const origin = request.headers.origin || request.headers.host
+            const origin = request.headers.origin || request.headers.host || "";
+            const allowedOrigins = ["https://aleymiguel.netlify.app", "aleymiguel.netlify.app"];
+            const allowedIpList = ["187.190.190.236"];
+
             console.log(request.headers);
 
             response.header('Access-Control-Allow-Origin', '*');
@@ -36,7 +38,11 @@ class Server{
             response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
             response.header('Allow', 'GET, POST, PUT, DELETE');
 
-            if((process.env.NODE_ENV === 'local') || (allowedOrigins.includes(origin) || (origin.search("distritopyme.netlify.app")))) {
+            if( (process.env.NODE_ENV === 'local') || 
+                (request.headers["user-agent"].search("PostmanRuntime") > 0 && allowedIpList.includes(request.headers["true-client-ip"])) || 
+                (allowedOrigins.includes(origin) || 
+                (request.headers["user-agent"].search("GitHub-Hookshot") > 0)) ) {
+                
                 next();
             }
             else {
