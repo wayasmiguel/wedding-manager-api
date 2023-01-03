@@ -10,7 +10,7 @@ class DB{
                     this.destiny = `mongodb://${process.env.CLUSTER}/${process.env.DATABASE}`;
                 }
                 else if(process.env.CLUSTER !== "localhost:27017"){//localhost:27017
-                    this.destiny = `mongodb+srv://${process.env.USER_DB}:${process.env.PASSWORD_DB}${process.env.CLUSTER}/${process.env.DATABASE}?retryWrites=true&w=majority`;
+                    this.destiny = `mongodb+srv://${process.env.USER_DB}:${process.env.PASSWORD_DB}@${process.env.CLUSTER}/${process.env.DATABASE}?retryWrites=true&w=majority`;
                 }
                 else{
                     this.destiny = `mongodb://${process.env.USER_DB}:${process.env.PASSWORD_DB}@${process.env.CLUSTER}/${process.env.DATABASE}`;

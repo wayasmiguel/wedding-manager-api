@@ -1,5 +1,5 @@
 {
-  "name": "microservices",
+  "name": "wedding-manager-api",
   "version": "1.0.0",
   "description": "Mongo DB, JWT, Socket.IO, Cron Jobs, Email",
   "main": "index.js",
