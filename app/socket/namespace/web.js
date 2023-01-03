@@ -1,5 +1,9 @@
 'use strict'
 
+const fs = require("fs");
+const path = require("path");
+const gitStatusPath = path.resolve('./git-status.json'); 
+
 module.exports = io => {
 
     const web = io.of("/");//Root namespace 
@@ -14,7 +18,9 @@ module.exports = io => {
     
         socket.on('askAppData', () => {
             try{
-                socket.emit('getAppData', require("../../../git-status.json"));
+                if(fs.existsSync(gitStatusPath)) {
+                    socket.emit('getAppData', JSON.parse(fs.readFileSync(gitStatusPath)));   
+                }
             }
             catch(error){
                 console.log(error);

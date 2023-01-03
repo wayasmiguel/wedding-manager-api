@@ -21,24 +21,31 @@ class Server{
     middlewares(){
         this.app.use(express.static(path.resolve(__dirname, '../public')));
         this.app.use(cors());
-        this.app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
-        this.app.use(bodyParser.json({limit: '50mb'}));
+        this.app.use(bodyParser.urlencoded({limit: '10mb', extended: true}));
+        this.app.use(bodyParser.json({limit: '10mb', extended: true}));
         this.app.use(fileUpload());
 
-        // this.app.use((request, response, next) => {
-        //     // response.header('Access-Control-Allow-Origin', '*');
-        //     // response.header('Access-Control-Allow-Headers', '*');
-        //     // response.header('Access-Control-Allow-Headers', 'API_TOKEN, Authorization, X-API-KEY, Origin, X-Requested-With, User-Agent, Content-Type, Accept, Access-Control-Allow-Request-Method');
-        //     // response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-        //     // response.header('Allow', 'GET, POST, PUT, DELETE');
-          
-        //     next();
+        this.app.use((request, response, next) => {
+            const allowedOrigins = ["https://aleymiguel.netlify.app/", "187.190.190.236"];
+            const origin = request.headers.origin || request.headers.host
+            console.log(origin);
 
-        //     return response.json({
-        //         status: 403,
-        //         msg: `You don´t have permissions. Only specific domains are allowed to access.`
-        //     });
-        // });
+            response.header('Access-Control-Allow-Origin', '*');
+            response.header('Access-Control-Allow-Headers', '*');
+            response.header('Access-Control-Allow-Headers', 'API_TOKEN, Authorization, X-API-KEY, Origin, X-Requested-With, User-Agent, Content-Type, Accept, Access-Control-Allow-Request-Method');
+            response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+            response.header('Allow', 'GET, POST, PUT, DELETE');
+
+            if(process.env.NODE_ENV === 'local' || (allowedOrigins.includes(origin))) {
+                next();
+            }
+            else {
+                return response.json({
+                    status: 403,
+                    msg: `You don´t have permissions. Only specific domains are allowed to access.`
+                });
+            }
+        });
     }
 
     routing(){
