@@ -8,7 +8,14 @@ const gitStatusPath = path.resolve('./git-status.json');
 const statusController = {
     getStatus: (_, response) => {
         try{
-            return response.json(JSON.parse(fs.readFileSync(gitStatusPath)));
+            if(fs.existsSync(gitStatusPath)) {
+                return response.json(JSON.parse(fs.readFileSync(gitStatusPath)));
+            }
+            
+            return response.json({
+                code: 200,
+                msg: "Git status file haven't been created yet"
+            });
         }
         catch(error){
             return response.json({
