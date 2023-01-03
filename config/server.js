@@ -26,9 +26,9 @@ class Server{
         this.app.use(fileUpload());
 
         this.app.use((request, response, next) => {
-            const allowedOrigins = ["https://aleymiguel.netlify.app/", "187.190.190.236"];
+            const allowedOrigins = ["https://aleymiguel.netlify.app/", "wedding-manager-api.onrender.com", "187.190.190.236"];
             const origin = request.headers.origin || request.headers.host
-            console.log(origin);
+            console.log(request.headers);
 
             response.header('Access-Control-Allow-Origin', '*');
             response.header('Access-Control-Allow-Headers', '*');
@@ -36,7 +36,7 @@ class Server{
             response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
             response.header('Allow', 'GET, POST, PUT, DELETE');
 
-            if(process.env.NODE_ENV === 'local' || (allowedOrigins.includes(origin))) {
+            if((process.env.NODE_ENV === 'local') || (allowedOrigins.includes(origin) || (origin.search("distritopyme.netlify.app")))) {
                 next();
             }
             else {
