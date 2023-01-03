@@ -50,8 +50,8 @@ const statusController = {
                         date: moment(commit.timestamp).tz("America/Mexico_City").format("DD/MM/YYYY hh:mm:ss a")
                     },
                     user: {
-                        name: commit.author,
-                        username: commit.author
+                        name: commit.author.name,
+                        username: commit.author.username
                     },
                     modified: commit.modified
                 })
