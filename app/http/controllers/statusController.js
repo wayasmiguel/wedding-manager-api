@@ -19,20 +19,19 @@ const statusController = {
     },
     updateStatus: (request, response) => {
         let data = request.body;
-        let commit = data.commits[0];
     
         if(fs.existsSync(gitStatusPath)){
             let gitStatus = JSON.parse(fs.readFileSync(gitStatusPath));
     
-            gitStatus.branch = data.ref.split("/")[2];
+            gitStatus.branch = data.repository.default_branch;
             gitStatus.commit = {
-                message: commit.message,
-                url: commit.url,
-                date: moment(commit.timestamp).tz("America/Mexico_City").format("DD/MM/YYYY hh:mm:ss a")
+                message: data.repository.description,
+                url: data.repository.commits_url,
+                date: moment(data.created_at).tz("America/Mexico_City").format("DD/MM/YYYY hh:mm:ss a")
             };
             gitStatus.user = {
-                name: data.user_name,
-                username: data.user_username
+                name: data.sender.login,
+                username: data.sender.login
             };
     
             fs.writeFileSync(gitStatusPath, 
@@ -42,21 +41,21 @@ const statusController = {
         else{
             fs.appendFileSync(gitStatusPath, 
                 JSON.stringify({
-                    branch: data.ref.split("/")[2],
+                    branch: data.repository.default_branch,
                     commit: {
-                        message: commit.message,
-                        url: commit.url,
-                        date: moment(commit.timestamp).tz("America/Mexico_City").format("DD/MM/YYYY hh:mm:ss a")
+                        message: data.repository.description,
+                        url: data.repository.commits_url,
+                        date: moment(data.created_at).tz("America/Mexico_City").format("DD/MM/YYYY hh:mm:ss a")
                     },
                     user: {
-                        name: data.user_name,
-                        username: data.user_username
+                        name: data.sender.login,
+                        username: data.sender.login
                     }
                 })
             );
         }
     
-        global.io.emit('getAppData', JSON.parse(fs.readFileSync(gitStatusPath)));
+        // global.io.emit('getAppData', JSON.parse(fs.readFileSync(gitStatusPath)));
     
         return response.status(200).json({
             code: 200,
