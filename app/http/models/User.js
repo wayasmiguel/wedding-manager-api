@@ -1,18 +1,17 @@
 'use strict'
 
 const { Schema, model } = require('mongoose');
+const modelName = "User";
 const bcrypt = require('bcryptjs');
 
 const modelSchema = new Schema({
-    name: { type: String },
-    lastName: { type: String },
-    secondLastName: { type: String },
-    email: { type: String },
-    password: { type: String },
-    active: { type: Boolean, default: true }
+    username:  { type: String, unique: true  },
+    email:     { type: String, unique: true },
+    password:  { type: String },
+    active:    { type: Boolean, default: true }
 }, 
 { 
-    collection: 'User',
+    collection: modelName,
     timestamps: true
 });
 
@@ -25,17 +24,17 @@ modelSchema.pre('save', async function (next) {
     next();
 });
 
-modelSchema.pre('findOneAndUpdate', async function (next) {
+modelSchema.pre('findOneAndUpdate', function (next) {
     if(this._update.password){
-        this._update.password = await bcrypt.hash(this._update.password, 12);
+        this._update.password = bcrypt.hashSync(this._update.password, 12);
     }
     next();
 });
 
 modelSchema.method('toJSON', function(){
     const { __v, _id, password, ...object } = this.toObject();
-    object.uid = _id;
+    // object.uid = _id;
     return object;
 });
 
-module.exports = model('User', modelSchema);
+module.exports = model(modelName, modelSchema);

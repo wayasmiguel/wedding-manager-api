@@ -5,48 +5,48 @@ const jwt = require("../helpers/jwt");
 
 const authController = {
     sigin: async(request, response) => {
-        try{
-            let {name, lastName, secondLastName, email, password} = request.body;
+        try {
+            const { username, email, password } = request.body;
 
-            await User.create({name, lastName, secondLastName, email, password});
+            await User.create({ username, email, password });
     
             return response.json({
                 code: 200,
                 msg: "Usuario registrado exitosamente."
             });
         }
-        catch(error){
-            console.log(error);
+        catch(error) {
             return response.json({
                 code: 500,
-                msg: "Ha ocurrido un error al tratar de guardar un usuario."
+                msg: "Ha ocurrido un error al tratar de crear un nuevo usuario.",
+                error: error.keyPattern
             });
         }
     },
     login: async(request, response) => {
-        try{
-            let {email, password} = request.body;
+        try {
+            const { username, password } = request.body;
 
-            let user = await User.findOne({email});
+            const user = await User.findOne({username});
     
-            if(!user){
+            if(!user) {
                 return response.json({
                     code: 404,
-                    msg: "El correo electrónico no existe."
+                    msg: "El usuario no existe."
                 });
             }
 
-            let validPassword = await user.validatePassword(password);
+            const validPassword = await user.validatePassword(password);
     
-            if(!validPassword){
+            if(!validPassword) {
                 return response.json({
                     code: 401,
                     msg: "Contraseña incorrecta."
                 });
             }
-    
-            let token = jwt.generateToken({
-                uid: user.uid
+
+            const token = jwt.generateToken({
+                uid: user._id
             });
     
             return response.json({
@@ -54,7 +54,7 @@ const authController = {
                 token
             });
         }
-        catch(error){
+        catch(error) {
             console.log(error);
             return response.json({
                 code: 500,
@@ -63,28 +63,28 @@ const authController = {
         }
     },
     infinityToken: async(request, response) => {
-        try{
-            let {email, password} = request.body;
+        try {
+            const { username, password } = request.body;
 
-            let user = await User.findOne({email});
+            const user = await User.findOne({username});
     
-            if(!user){
+            if(!user) {
                 return response.json({
                     code: 404,
-                    msg: "El correo electrónico no existe."
+                    msg: "El usuario no existe."
                 });
             }
 
-            let validPassword = await user.validatePassword(password);
+            const validPassword = await user.validatePassword(password);
     
-            if(!validPassword){
+            if(!validPassword) {
                 return response.json({
                     code: 401,
                     msg: "Contraseña incorrecta."
                 });
             }
     
-            let token = jwt.generateInfiniteToken({
+            const token = jwt.generateInfiniteToken({
                 uid: user.uid
             });
     
@@ -93,28 +93,28 @@ const authController = {
                 token
             });
         }
-        catch(error){
+        catch(error) {
             console.log(error);
             return response.json({
                 code: 500,
-                msg: "Ha ocurrido un error al tratar de generar un token infinito."
+                msg: "Ha ocurrido un error al tratar de generar el token infinito."
             });
         }
     },
     resetPassword: async(request, response) => {
-        try{
-            let {email} = request.body;
+        try {
+            const { username } = request.body;
 
-            let user = await User.findOne({email});
+            const user = await User.findOne({username});
     
-            if(!user){
+            if(!user) {
                 return response.json({
                     code: 404,
-                    msg: "El correo electrónico no existe."
+                    msg: "El usuario no existe."
                 });
             }
     
-            let token = jwt.generateToken({
+            const token = jwt.generateToken({
                 uid: user.uid
             }, {
                 expiresIn: "30m"
@@ -125,7 +125,7 @@ const authController = {
                 token
             });
         }
-        catch(error){
+        catch(error) {
             return response.json({
                 code: 500,
                 msg: "Ha ocurrido un error al tratar de crear una solicitud de cambio de contraseña."
@@ -133,12 +133,12 @@ const authController = {
         }
     },
     changePassword: async(request, response) => {
-        try{
-            let {token, password} = request.body;
+        try {
+            const {token, password} = request.body;
 
-            let verification = jwt.verifyToken(token);
+            const verification = jwt.verifyToken(token);
 
-            if(verification.code != 200){
+            if(verification.code != 200) {
                 return response.json(verification);
             }
 
@@ -149,7 +149,7 @@ const authController = {
                 msg: "Contraseña cambiada exitosamente."
             });
         }
-        catch(error){
+        catch(error) {
             return response.json({
                 code: 500,
                 msg: "Ha ocurrido un error al tratar de cambiar la contraseña."

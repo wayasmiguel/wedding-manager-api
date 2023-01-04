@@ -1,9 +1,11 @@
 'use strict'
 
 /*
+|--------------------------------------------------------------------------
 |  emit: send an event to every single socket 
 |  broadcast: send an event to every single socket except the origin
 |  to/in: send an event to specific room socket joined
+|--------------------------------------------------------------------------
 */
 
 const socketIo = require('socket.io');

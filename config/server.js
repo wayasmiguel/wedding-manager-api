@@ -32,7 +32,7 @@ class Server{
 
             response.header('Access-Control-Allow-Origin', '*');
             response.header('Access-Control-Allow-Headers', '*');
-            response.header('Access-Control-Allow-Headers', 'API_TOKEN, Authorization, X-API-KEY, Origin, X-Requested-With, User-Agent, Content-Type, Accept, Access-Control-Allow-Request-Method');
+            response.header('Access-Control-Allow-Headers', 'wm_token, Authorization, X-API-KEY, Origin, X-Requested-With, User-Agent, Content-Type, Accept, Access-Control-Allow-Request-Method');
             response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
             response.header('Allow', 'GET, POST, PUT, DELETE');
 

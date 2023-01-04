@@ -5,16 +5,14 @@ const route = express.Router();
 const verifyToken = require("../helpers/jwt").verifyToken;
 
 route.use((request, response, next) => {
-    let { tokensecret, token } = request.headers;
-    let tokenProvided = (token != null && token != 'null') ? token : tokensecret;
+    const { wm_token } = request.headers;
 
-    if(tokenProvided){
-        let verification = verifyToken(tokenProvided);
+    if(wm_token) {
+        const verification = verifyToken(wm_token);
 
-        if(verification.code == 200){
-            if(verification.user != 'guest'){
-                request.headers['tokenDecoded'] = verification.id;
-            }
+        if(verification.code === 200){
+            request.headers['token'] = verification.decoded.uid;
+
             next();
         }
         else{
