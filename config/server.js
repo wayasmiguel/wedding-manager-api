@@ -30,6 +30,8 @@ class Server{
             const allowedOrigins = ["https://aleymiguel.netlify.app", "aleymiguel.netlify.app"];
             const allowedIpList = ["187.190.190.236"];
 
+            console.log(request.headers);
+
             response.header('Access-Control-Allow-Origin', '*');
             response.header('Access-Control-Allow-Headers', '*');
             response.header('Access-Control-Allow-Headers', 'wm_token, Authorization, X-API-KEY, Origin, X-Requested-With, User-Agent, Content-Type, Accept, Access-Control-Allow-Request-Method');
@@ -39,6 +41,7 @@ class Server{
             if( (process.env.NODE_ENV === 'local') ||
                 (request.headers["user-agent"].search("Postman") >= 0 && allowedIpList.includes(request.headers["true-client-ip"])) || 
                 (allowedOrigins.includes(origin) || 
+                (allowedIpList.includes(request.headers["true-client-ip"])) ||
                 (request.headers["user-agent"].search("GitHub") >= 0)) ) {
                 
                 next();
