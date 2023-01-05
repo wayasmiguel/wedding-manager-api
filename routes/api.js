@@ -17,7 +17,8 @@ route.use(verifyToken);
 
 //Controllers
 
-const guestController = require("../app/http/controllers/guestController")
+const guestController = require("../app/http/controllers/guestController");
+const settingsController = require("../app/http/controllers/settingsController")
 
 //Routes
 
@@ -30,9 +31,11 @@ route.group('/guest', (guest) => {
 });
 
 //Settings routes
-route.group('/setting', (setting) => {
-    setting.get('/', guestController.get);
-    setting.put('/:id', guestController.update);
+route.group('/settings', (settings) => {
+    settings.post('/', settingsController.create);
+    settings.get('/:id', settingsController.get);
+    settings.put('/:id', settingsController.update);
+    settings.delete('/:id', settingsController.delete);
 });
 
 module.exports = route;

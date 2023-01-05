@@ -13,7 +13,7 @@ const modelSchema = new Schema({
   } ]
 }, 
 { 
-    collection: model,
+    collection: modelName,
     timestamps: true
 });
 

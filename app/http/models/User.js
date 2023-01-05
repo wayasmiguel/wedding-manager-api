@@ -8,14 +8,15 @@ const modelSchema = new Schema({
     username:  { type: String, unique: true  },
     email:     { type: String, unique: true },
     password:  { type: String },
-    active:    { type: Boolean, default: true }
+    active:    { type: Boolean, default: true },
+    settings:  { type: Schema.Types.ObjectId, ref: 'User' },
 }, 
 { 
     collection: modelName,
     timestamps: true
 });
 
-modelSchema.methods.validatePassword = function(password){
+modelSchema.methods.validatePassword = function(password) {
     return bcrypt.compare(password, this.password);
 }
 
@@ -31,7 +32,7 @@ modelSchema.pre('findOneAndUpdate', function (next) {
     next();
 });
 
-modelSchema.method('toJSON', function(){
+modelSchema.method('toJSON', function() {
     const { __v, _id, password, ...object } = this.toObject();
     // object.uid = _id;
     return object;

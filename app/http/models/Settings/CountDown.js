@@ -1,14 +1,14 @@
 'use strict'
 
 const { Schema, model } = require('mongoose');
-const model = "CountDown";
+const modelName = "CountDown";
 
 const modelSchema = new Schema({
   title: { type: String },
   date:  { type: String }
 }, 
 { 
-    collection: model,
+    collection: modelName,
     timestamps: true
 });
 
@@ -18,4 +18,4 @@ modelSchema.method('toJSON', function() {
     return object;
 });
 
-module.exports = model(model, modelSchema);
+module.exports = model(modelName, modelSchema);
