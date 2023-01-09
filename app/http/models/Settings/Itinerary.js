@@ -6,11 +6,14 @@ const modelName = "Itinerary";
 const modelSchema = new Schema({
   title:    { type: String },
   subtitle: { type: String },
-  timeline: [ {
-    subtitle:     String,
-    textGeneral:  String,
-    textSmall:    String
-  } ]
+  timeline: {
+    type: Array,
+    default: [ {
+      subtitle:     String,
+      textGeneral:  String,
+      textSmall:    String
+    } ]
+  }
 }, 
 { 
     collection: modelName,

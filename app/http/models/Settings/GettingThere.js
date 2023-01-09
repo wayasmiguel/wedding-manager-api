@@ -5,12 +5,15 @@ const modelName = "GettingThere";
 
 const modelSchema = new Schema({
   title: { type: String },
-  places: [ {
-    sufix:    String,
-    name:     String,
-    address:  String,
-    map:      String
-  } ]
+  places: {
+    type: Array,
+    default: [ {
+      sufix:    String,
+      name:     String,
+      address:  String,
+      map:      String
+    } ]
+  }
 }, 
 { 
     collection: modelName,

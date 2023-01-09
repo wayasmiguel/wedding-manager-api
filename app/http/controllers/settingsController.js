@@ -1,6 +1,7 @@
 'use strict'
 
 const { Settings, CountDown, Itinerary, GettingThere, GiftTable, HashTag, Confirmation, User } = require("../models");
+const cleanObject = require("../helpers/cleanObject");
 
 const settingController = {
     create: async(request, response) => {
@@ -46,7 +47,11 @@ const settingController = {
         try {
             const { id } = request.params;
 
-            const settings = await Settings.findById(id);
+            let settings = await Settings.findById(id).lean({ autopopulate: true });
+
+            if (settings) {
+                settings = cleanObject(settings, ['_id', 'createdAt', 'updatedAt', '__v']);
+            }
 
             return response.json({
                 code: 200,
@@ -55,6 +60,7 @@ const settingController = {
             });
         }
         catch(error) {
+            console.log(error);
             return response.json({
                 code: 500,
                 msg: "Ha ocurrido un error al tratar de obtener los ajustes."
@@ -77,6 +83,26 @@ const settingController = {
     },
     delete: async(request, response) => {
         try {
+            const { id } = request.params;
+            const { token } = request.headers;
+
+            const settings = await Settings.findById(id);
+
+            const { countDown, itinerary, gettingThere, giftTable, hashTag, confirmation } = settings;
+
+            await CountDown.findByIdAndRemove(countDown._id);
+            await Itinerary.findByIdAndRemove(itinerary._id);
+            await GettingThere.findByIdAndRemove(gettingThere._id);
+            await GiftTable.findByIdAndRemove(giftTable._id);
+            await HashTag.findByIdAndRemove(hashTag._id);
+            await Confirmation.findByIdAndRemove(confirmation._id);
+
+            await Settings.findByIdAndRemove(id);
+
+            await User.findByIdAndUpdate(token, {
+                $unset: { settings: "" }
+            }); 
+
             return response.json({
                 code: 200,
                 msg: "Ajustes eliminados exitosamente."

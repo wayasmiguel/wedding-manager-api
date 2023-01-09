@@ -5,10 +5,13 @@ const modelName = "GiftTable";
 
 const modelSchema = new Schema({
   title:  { type: String },
-  tables: [ {
-    code:  String,
-    url:   String
-  } ]
+  tables: {
+    type: Array,
+    default: [ {
+      code:  String,
+      url:   String
+    } ]
+  }
 }, 
 { 
     collection: modelName,

@@ -4,13 +4,13 @@ const { Schema, model } = require('mongoose');
 const modelName = "Settings";
 
 const modelSchema = new Schema({
-    user:          { type: Schema.Types.ObjectId, ref: 'User', autopopulate: false },
-    countDown:     { type: Schema.Types.ObjectId, ref: 'CountDown', autopopulate: { select: 'title date' } },
-    itinerary:     { type: Schema.Types.ObjectId, ref: 'Itinerary', autopopulate: { select: 'title subtitle timeline' } },
-    gettingThere:  { type: Schema.Types.ObjectId, ref: 'GettingThere', autopopulate: { select: 'title places' } },
-    giftTable:     { type: Schema.Types.ObjectId, ref: 'GiftTable', autopopulate: { select: 'title tables'} },
-    hashTag:       { type: Schema.Types.ObjectId, ref: 'HashTag', autopopulate: { select: 'title hashtag textSmall' } },
-    confirmation:  { type: Schema.Types.ObjectId, ref: 'Confirmation', autopopulate: { select: 'title textGeneral'  } },
+    user:          { type: Schema.Types.ObjectId, ref: 'User',          autopopulate: false },
+    countDown:     { type: Schema.Types.ObjectId, ref: 'CountDown',     autopopulate: true },
+    itinerary:     { type: Schema.Types.ObjectId, ref: 'Itinerary',     autopopulate: true },
+    gettingThere:  { type: Schema.Types.ObjectId, ref: 'GettingThere',  autopopulate: true },
+    giftTable:     { type: Schema.Types.ObjectId, ref: 'GiftTable',     autopopulate: true },
+    hashTag:       { type: Schema.Types.ObjectId, ref: 'HashTag',       autopopulate: true },
+    confirmation:  { type: Schema.Types.ObjectId, ref: 'Confirmation',  autopopulate: true },
 }, 
 { 
     collection: modelName,
