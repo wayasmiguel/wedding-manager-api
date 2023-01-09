@@ -19,6 +19,9 @@ const statusController = require("../app/http/controllers/statusController");
 route.post('/signin', authController.sigin);
 route.post('/login', authController.login);
 route.post('/generateInfinityToken', authController.infinityToken);
+route.post('/reset-password', authController.resetPassword);
+route.post('/change-password', authController.changePassword);
+
 route.get("/status", statusController.getStatus);
 route.post("/update-status", statusController.updateStatus);
 
