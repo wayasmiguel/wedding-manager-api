@@ -3,6 +3,9 @@
 const { Settings, CountDown, Itinerary, GettingThere, GiftTable, HashTag, Confirmation, User } = require("../models");
 const cleanObject = require("../helpers/cleanObject");
 
+const { doc, updateDoc } = require("firebase/firestore");
+const db_firebase = require("../../../config/firebase");
+
 const settingController = {
     create: async(request, response) => {
         try {
@@ -69,15 +72,42 @@ const settingController = {
     },
     update: async(request, response) => {
         try {
+            const { id } = request.params;
+            const { countDown, itinerary, gettingThere, giftTable, hashTag, confirmation } = request.body;
+            const { token } = request.headers;
+
+            let settings = await Settings.findById(id);
+
+            await CountDown.findByIdAndUpdate(settings.countDown._id, countDown);
+            await Itinerary.findByIdAndUpdate(settings.itinerary._id, itinerary);
+            await GettingThere.findByIdAndUpdate(settings.gettingThere._id, gettingThere);
+            await GiftTable.findByIdAndUpdate(settings.giftTable._id, giftTable);
+            await HashTag.findByIdAndUpdate(settings.hashTag._id, hashTag);
+            await Confirmation.findByIdAndUpdate(settings.confirmation._id, confirmation);
+
+            settings = await Settings.findById(id).lean({ autopopulate: true });
+
+            if (settings) {
+                settings = cleanObject(settings, ['_id', 'createdAt', 'updatedAt', '__v']);
+                delete settings["user"];
+            }
+
+            const user = await User.findById(token); 
+
+            const settingsDoc = doc(db_firebase, "Settings", user.settings_firebase);
+            await updateDoc(settingsDoc, settings);
+
             return response.json({
                 code: 200,
                 msg: "Ajustes actualizados exitosamente."
             });
         }
         catch(error) {
+            console.log(error);
             return response.json({
                 code: 500,
-                msg: "Ha ocurrido un error al tratar de actualizar los ajustes."
+                msg: "Ha ocurrido un error al tratar de actualizar los ajustes.",
+                error: error
             });
         }
     },

@@ -5,11 +5,12 @@ const modelName = "User";
 const bcrypt = require('bcryptjs');
 
 const modelSchema = new Schema({
-    username:  { type: String, unique: true  },
-    email:     { type: String, unique: true },
-    password:  { type: String },
-    active:    { type: Boolean, default: true },
-    settings:  { type: Schema.Types.ObjectId, ref: 'User' },
+    username:           { type: String, unique: true  },
+    email:              { type: String, unique: true },
+    password:           { type: String },
+    active:             { type: Boolean, default: true },
+    settings:           { type: Schema.Types.ObjectId, ref: 'User' },
+    settings_firebase:  { type: String },
 }, 
 { 
     collection: modelName,
