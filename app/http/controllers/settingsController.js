@@ -60,10 +60,10 @@ const settingController = {
             });
         }
         catch(error) {
-            console.log(error);
             return response.json({
                 code: 500,
-                msg: "Ha ocurrido un error al tratar de obtener los ajustes."
+                msg: "Ha ocurrido un error al tratar de obtener los ajustes.",
+                error: error
             });
         }
     },
