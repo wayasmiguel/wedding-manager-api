@@ -25,9 +25,10 @@ const settingsController = require("../app/http/controllers/settingsController")
 //Guest routes
 route.group('/guest', (guest) => {
     guest.post('/', guestController.create);
-    guest.get('/:id', guestController.get);
+    guest.get('/:id?', guestController.get);
     guest.put('/:id', guestController.update);
     guest.delete('/:id', guestController.delete);
+    guest.post('/confirm/:id', guestController.confirm);
 });
 
 //Settings routes

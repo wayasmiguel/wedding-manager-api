@@ -85,7 +85,7 @@ const authController = {
             }
     
             const token = jwt.generateInfiniteToken({
-                uid: user.uid
+                uid: user._id
             });
     
             return response.json({
@@ -115,7 +115,7 @@ const authController = {
             }
     
             const token = jwt.generateToken({
-                uid: user.uid
+                uid: user._id
             }, {
                 expiresIn: "30m"
             });
@@ -142,7 +142,7 @@ const authController = {
                 return response.json(verification);
             }
 
-            await User.findByIdAndUpdate(verification.uid, {password});
+            await User.findByIdAndUpdate(verification.decoded.uid, {password});
 
             return response.json({
                 code: 200,

@@ -4,7 +4,17 @@ const { Schema, model } = require('mongoose');
 const modelName = "Guest";
 
 const modelSchema = new Schema({
-    
+    prefix:         { type: String },
+    name:           { type: String },
+    lastName:       { type: String },
+    phone:          { type: String, unique: true },
+    firstFilter:    { type: Number, default: 1 }, // 0 Canceled, 1 Pending, 2 Confirmed
+    secondFilter:   { type: Number, default: 1 }, // 0 Canceled, 1 Pending, 2 Confirmed
+    group:          { type: String },
+    age:            { type: String },
+    table:          { type: Number },
+    companions:     [ { type: Schema.Types.ObjectId, ref: 'Guest', autopopulate: false } ],
+    message:        { type: String },
 }, 
 { 
     collection: modelName,

@@ -26,9 +26,9 @@ modelSchema.pre('save', async function (next) {
     next();
 });
 
-modelSchema.pre('findOneAndUpdate', function (next) {
+modelSchema.pre('findOneAndUpdate', async function (next) {
     if(this._update.password){
-        this._update.password = bcrypt.hashSync(this._update.password, 12);
+        this._update.password = await bcrypt.hashSync(this._update.password, 12);
     }
     next();
 });
