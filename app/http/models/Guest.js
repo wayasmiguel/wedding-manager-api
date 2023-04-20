@@ -13,7 +13,16 @@ const modelSchema = new Schema({
     group:          { type: String },
     age:            { type: String },
     table:          { type: Number },
-    companions:     [ { type: Schema.Types.ObjectId, ref: 'Guest', autopopulate: false } ],
+    companions:     { 
+        adults: {
+            type: Number,
+            default: 0
+        },
+        children: {
+            type: Number,
+            default: 0
+        }
+    },
     message:        { type: String },
 }, 
 { 
