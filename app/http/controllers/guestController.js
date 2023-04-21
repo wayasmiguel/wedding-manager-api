@@ -1,14 +1,16 @@
 'use strict'
 
 const Guest = require("../models/Guest");
-const { Types } = require("mongoose")
+const { Types } = require("mongoose");
 
 const guestController = {
     create: async(request, response) => {
         try {
             const { prefix, name, lastName, phone, group, age, table, companions } = request.body;
 
-            await Guest.create({ prefix, name, lastName, phone, group, age, table, companions });
+            let code = (lastName.split(" ")[0].substring(0, 2) + name.split(" ")[0].substring(0, 1) + phone.substring(phone.length - 3)).toUpperCase();
+
+            await Guest.create({ prefix, name, lastName, phone, code, group, age, table, companions });
 
             return response.json({
                 code: 200,
@@ -30,7 +32,16 @@ const guestController = {
             if(id) {
                 const ObjectId = new Types.ObjectId( (id.length < 12) ? "123456789012" : id );
     
-                const guest = await Guest.findOne( {$or: [ {'_id': ObjectId}, {'phone': id} ]} );
+                const guest = await Guest.findOne( { $or: [ { '_id': ObjectId }, { 'phone': id }, { 'code': id } ] } ).select({ 
+                    firstFilter: 0,
+                    secondFilter: 0,
+                    group: 0,
+                    age: 0,
+                    table: 0,
+                    createdAt: 0,
+                    updatedAt: 0,
+                    _id: 0
+                });
     
                 if(guest) {
                     return response.json({
@@ -40,7 +51,7 @@ const guestController = {
                 }
                 else {
                     return response.json({
-                        code: 200,
+                        code: 404,
                         msg: "Invitado no encontrado."
                     });
                 }
@@ -77,7 +88,7 @@ const guestController = {
             }
             else {
                 return response.json({
-                    code: 200,
+                    code: 404,
                     msg: "Invitado no encontrado."
                 });
             }
@@ -104,7 +115,7 @@ const guestController = {
             }
             else {
                 return response.json({
-                    code: 200,
+                    code: 404,
                     msg: "Invitado no encontrado."
                 });
             }
@@ -124,7 +135,7 @@ const guestController = {
 
             const ObjectId = new Types.ObjectId( (id.length < 12) ? "123456789012" : id );
 
-            const guest = await Guest.findOne( {$or: [ {'_id': ObjectId}, {'phone': id} ]} );
+            const guest = await Guest.findOne( { $or: [ { '_id': ObjectId }, { 'phone': id }, { 'code': id } ] } );
 
             if(guest) {
 
@@ -143,7 +154,7 @@ const guestController = {
             }
             else {
                 return response.json({
-                    code: 200,
+                    code: 404,
                     msg: "Invitado no encontrado."
                 });
             }

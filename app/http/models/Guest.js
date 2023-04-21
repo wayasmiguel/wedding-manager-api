@@ -8,6 +8,7 @@ const modelSchema = new Schema({
     name:           { type: String },
     lastName:       { type: String },
     phone:          { type: String, unique: true },
+    code:           { type: String, unique: true },
     firstFilter:    { type: Number, default: 1 }, // 0 Canceled, 1 Pending, 2 Confirmed
     secondFilter:   { type: Number, default: 1 }, // 0 Canceled, 1 Pending, 2 Confirmed
     group:          { type: String },
