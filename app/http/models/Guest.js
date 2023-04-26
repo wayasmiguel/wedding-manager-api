@@ -9,8 +9,6 @@ const modelSchema = new Schema({
     lastName:       { type: String },
     phone:          { type: String, unique: true },
     code:           { type: String, unique: true },
-    firstFilter:    { type: Number, default: 1 }, // 0 Canceled, 1 Pending, 2 Confirmed
-    secondFilter:   { type: Number, default: 1 }, // 0 Canceled, 1 Pending, 2 Confirmed
     group:          { type: String },
     age:            { type: String },
     table:          { type: Number },
@@ -22,6 +20,36 @@ const modelSchema = new Schema({
         children: {
             type: Number,
             default: 0
+        }
+    },
+    confirmation: {
+        firstFilter: {
+            date: { type: Date },
+            status: { type: Number, default: 1 }, // 0 Canceled, 1 Pending, 2 Confirmed
+            companions: {
+                adults: {
+                    type: Number,
+                    default: 0
+                },
+                children: {
+                    type: Number,
+                    default: 0
+                }
+            }
+        },
+        secondFilter: {
+            date: { type: Date },
+            status: { type: Number, default: 1 }, // 0 Canceled, 1 Pending, 2 Confirmed
+            companions: {
+                adults: {
+                    type: Number,
+                    default: 0
+                },
+                children: {
+                    type: Number,
+                    default: 0
+                }
+            }
         }
     },
     message:        { type: String },

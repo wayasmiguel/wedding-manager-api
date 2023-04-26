@@ -32,21 +32,27 @@ const guestController = {
             if(id) {
                 const ObjectId = new Types.ObjectId( (id.length < 12) ? "123456789012" : id );
     
-                const guest = await Guest.findOne( { $or: [ { '_id': ObjectId }, { 'phone': id }, { 'code': id } ] } ).select({ 
-                    firstFilter: 0,
-                    secondFilter: 0,
+                const guest = await Guest.findOne( { $or: [ { '_id': ObjectId }, { 'phone': id }, { 'code': id } ] } ).lean();
+
+                /*.select({ 
+                    confirmation: 0,
                     group: 0,
                     age: 0,
                     table: 0,
                     createdAt: 0,
                     updatedAt: 0,
-                    _id: 0
-                });
+                    _id: 0,
+                    __v: 0
+                });*/
+
+                guest.stage = guest.confirmation.secondFilter.status != 1 ? 2 : guest.confirmation.firstFilter.status != 1 ? 1 : 0;
+
+                const { confirmation, group, age, table, createdAt, updatedAt, _id, __v, ...guestData } = guest;
     
                 if(guest) {
                     return response.json({
                         code: 200,
-                        guest
+                        guestData
                     });
                 }
                 else {
@@ -131,21 +137,43 @@ const guestController = {
     confirm: async(request, response) => {
         try {
             const { id } = request.params;
-            const { confirm } = request.body;
+            const { companions, status } = request.body;
 
             const ObjectId = new Types.ObjectId( (id.length < 12) ? "123456789012" : id );
 
             const guest = await Guest.findOne( { $or: [ { '_id': ObjectId }, { 'phone': id }, { 'code': id } ] } );
 
             if(guest) {
-
                 let filterStage = 'firstFilter';
 
-                if (guest.firstFilter !== 1) {
+                if (guest.confirmation.firstFilter.status !== 1) {
                     filterStage = 'secondFilter';
                 }
 
-                await Guest.findByIdAndUpdate(guest._id, {[filterStage]: confirm });
+                // {
+                //     confirmation: {
+                //         firstFilter: {
+                //             companions: {
+                //                 adults: 0,
+                //                 children: 0
+                //             },
+                //             status: 1
+                //         },
+                //         secondFilter: {
+                //             companions: {
+                //                 adults: 0,
+                //                 children: 0
+                //             },
+                //             status: 1
+                //         }
+                //     }
+                // }
+
+                await Guest.findByIdAndUpdate(guest._id, { $set: { [`confirmation.${filterStage}`]: {
+                    date: Date.now(),
+                    companions,
+                    status
+                }} });
 
                 return response.json({
                     code: 200,
