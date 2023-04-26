@@ -47,12 +47,12 @@ const guestController = {
 
                 guest.stage = guest.confirmation.secondFilter.status != 1 ? 2 : guest.confirmation.firstFilter.status != 1 ? 1 : 0;
 
-                const { confirmation, group, age, table, createdAt, updatedAt, _id, __v, ...guestData } = guest;
+                const { confirmation, group, age, table, createdAt, updatedAt, _id, __v, ...dataFiltered } = guest;
     
                 if(guest) {
                     return response.json({
                         code: 200,
-                        guestData
+                        guest: dataFiltered
                     });
                 }
                 else {
