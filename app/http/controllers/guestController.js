@@ -3,6 +3,25 @@
 const Guest = require("../models/Guest");
 const { Types } = require("mongoose");
 
+// {
+//     confirmation: {
+//         firstFilter: {
+//             companions: {
+//                 adults: 0,
+//                 children: 0
+//             },
+//             status: 1
+//         },
+//         secondFilter: {
+//             companions: {
+//                 adults: 0,
+//                 children: 0
+//             },
+//             status: 1
+//         }
+//     }
+// }
+
 const guestController = {
     create: async(request, response) => {
         try {
@@ -44,12 +63,27 @@ const guestController = {
                     _id: 0,
                     __v: 0
                 });*/
-
-                guest.stage = guest.confirmation.secondFilter.status != 1 ? 2 : guest.confirmation.firstFilter.status != 1 ? 1 : 0;
-
-                const { confirmation, group, age, table, createdAt, updatedAt, _id, __v, ...dataFiltered } = guest;
     
                 if(guest) {
+
+                    if (guest.confirmation.firstFilter.status !== 1 && guest.confirmation.secondFilter.status !== 1) {
+                        return response.json({
+                            code: 202,
+                            msg: `Invitado ${guest.confirmation.secondFilter.status ? 'confirmado' : 'declinado'}.`
+                        });
+                    }
+
+                    if (guest.confirmation.firstFilter.status === 0) {
+                        return response.json({
+                            code: 204,
+                            msg: "Invitado declinado."
+                        });
+                    }
+
+                    // guest.stage = guest.confirmation.secondFilter.status != 1 ? 2 : guest.confirmation.firstFilter.status != 1 ? 1 : 0;
+
+                    const { confirmation, group, age, table, createdAt, updatedAt, _id, __v, ...dataFiltered } = guest;
+                    
                     return response.json({
                         code: 200,
                         guest: dataFiltered
@@ -150,25 +184,6 @@ const guestController = {
                     filterStage = 'secondFilter';
                 }
 
-                // {
-                //     confirmation: {
-                //         firstFilter: {
-                //             companions: {
-                //                 adults: 0,
-                //                 children: 0
-                //             },
-                //             status: 1
-                //         },
-                //         secondFilter: {
-                //             companions: {
-                //                 adults: 0,
-                //                 children: 0
-                //             },
-                //             status: 1
-                //         }
-                //     }
-                // }
-
                 await Guest.findByIdAndUpdate(guest._id, { $set: { [`confirmation.${filterStage}`]: {
                     date: Date.now(),
                     companions,
@@ -177,7 +192,7 @@ const guestController = {
 
                 return response.json({
                     code: 200,
-                    msg: "Asistencia confirmada exitosamente."
+                    msg: `Asistencia ${status ? 'confirmada' : 'declinada'} exitosamente.`
                 });
             }
             else {
