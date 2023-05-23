@@ -3,25 +3,6 @@
 const Guest = require("../models/Guest");
 const { Types } = require("mongoose");
 
-// {
-//     confirmation: {
-//         firstFilter: {
-//             companions: {
-//                 adults: 0,
-//                 children: 0
-//             },
-//             status: 1
-//         },
-//         secondFilter: {
-//             companions: {
-//                 adults: 0,
-//                 children: 0
-//             },
-//             status: 1
-//         }
-//     }
-// }
-
 const guestController = {
     create: async(request, response) => {
         try {
@@ -206,6 +187,42 @@ const guestController = {
             return response.json({
                 code: 500,
                 msg: "Ha ocurrido un error al tratar de confirmar la asistencia.",
+                error: error.message
+            });
+        }
+    },
+    restartConfirmation: async(_, response) => {
+        try {
+            const guests = await Guest.find();
+
+            if(guests) {
+                let defaultData = {
+                    date: null,
+                    companions: {
+                        adults: 0,
+                        children: 0
+                    },
+                    status: 1
+                };
+
+                await Guest.updateMany({}, { $set: { 'confirmation.firstFilter': defaultData, 'confirmation.secondFilter': defaultData } });
+
+                return response.json({
+                    code: 200,
+                    msg: `Asistencia reiniciada exitosamente.`
+                });
+            }
+            else {
+                return response.json({
+                    code: 404,
+                    msg: "No se han encontrado invitados."
+                });
+            }
+        }
+        catch(error) {
+            return response.json({
+                code: 500,
+                msg: "Ha ocurrido un error al tratar de reiniciar la asistencia.",
                 error: error.message
             });
         }

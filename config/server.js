@@ -27,7 +27,7 @@ class Server{
 
         this.app.use((request, response, next) => {
             const origin = request.headers.origin || request.headers.host || "";
-            const allowedOrigins = ["https://aleymiguel.netlify.app", "aleymiguel.netlify.app"];
+            const allowedOrigins = ["https://aleymiguel.netlify.app", "aleymiguel.netlify.app", "https://aleymiguel.com.mx", "aleymiguel.com.mx"];
             const allowedIpList = process.env.ALLOWED_IP_LIST || [];
 
             response.header('Access-Control-Allow-Origin', '*');
@@ -79,7 +79,7 @@ class Server{
             /*Server http*/
             await this.server.listen(this.port, () => {
                 console.log(`Server running on port: ${this.port}`);
-                this.socket(this.server);
+                // this.socket(this.server);
             });
 
             await this.db.connect();
