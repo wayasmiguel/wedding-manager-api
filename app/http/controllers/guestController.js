@@ -8,7 +8,7 @@ const guestController = {
         try {
             const { name, lastName, phone, group, age, table, companions } = request.body;
 
-            let code = (lastName.split(" ")[0].substring(0, 2) + name.split(" ")[0].substring(0, 1) + phone.substring(phone.length - 3)).toUpperCase();
+            const code = (lastName.split(" ")[0].substring(0, 2) + name.split(" ")[0].substring(0, 1) + phone.substring(phone.length - 3)).toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
             await Guest.create({ name, lastName, phone, code, group, age, table, companions });
 
@@ -99,7 +99,9 @@ const guestController = {
             const { id } = request.params;
             const { name, lastName, phone, group, age, table, companions } = request.body;
 
-            const guest = await Guest.findByIdAndUpdate(id, { name, lastName, phone, group, age, table, companions });
+            const code = (lastName.split(" ")[0].substring(0, 2) + name.split(" ")[0].substring(0, 1) + phone.substring(phone.length - 3)).toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+            const guest = await Guest.findByIdAndUpdate(id, { name, lastName, phone, code, group, age, table, companions });
 
             if(guest) {
                 return response.json({
