@@ -3,6 +3,22 @@
 const Guest = require("../models/Guest");
 const { Types } = require("mongoose");
 
+const firstFilter = {
+    startDate : new Date("2023-05-30").getTime(),
+    endDate : new Date("2023-07-31").getTime()
+}
+
+// const secondFilter = {
+//     startDate : new Date("2023-08-01").getTime(),
+//     endDate : new Date("2023-07-30").getTime()
+// }
+
+const isDateBetWeen  = (startDate, endDate) => {
+    const dateValue = new Date().getTime();
+
+    return dateValue >= startDate && dateValue <= endDate;
+}
+
 const guestController = {
     create: async(request, response) => {
         try {
@@ -47,17 +63,24 @@ const guestController = {
     
                 if(guest) {
 
-                    if (guest.confirmation.firstFilter.status !== 1 && guest.confirmation.secondFilter.status !== 1) {
-                        return response.json({
-                            code: 202,
-                            msg: `Invitado ${guest.confirmation.secondFilter.status ? 'confirmado' : 'declinado'}.`
-                        });
-                    }
-
                     if (guest.confirmation.firstFilter.status === 0) {
                         return response.json({
                             code: 204,
                             msg: "Invitado declinado."
+                        });
+                    }
+
+                    if(guest.confirmation.firstFilter.status === 2 && isDateBetWeen(firstFilter.startDate, firstFilter.endDate)) {
+                        return response.json({
+                            code: 202,
+                            msg: `Invitado confirmado.`
+                        });
+                    }
+
+                    if (guest.confirmation.secondFilter.status !== 1) {
+                        return response.json({
+                            code: 202,
+                            msg: `Invitado ${guest.confirmation.secondFilter.status ? 'confirmado' : 'declinado'}.`
                         });
                     }
 
