@@ -6,11 +6,11 @@ const { Types } = require("mongoose");
 const guestController = {
     create: async(request, response) => {
         try {
-            const { prefix, name, lastName, phone, group, age, table, companions } = request.body;
+            const { name, lastName, phone, group, age, table, companions } = request.body;
 
             let code = (lastName.split(" ")[0].substring(0, 2) + name.split(" ")[0].substring(0, 1) + phone.substring(phone.length - 3)).toUpperCase();
 
-            await Guest.create({ prefix, name, lastName, phone, code, group, age, table, companions });
+            await Guest.create({ name, lastName, phone, code, group, age, table, companions });
 
             return response.json({
                 code: 200,
@@ -97,9 +97,9 @@ const guestController = {
     update: async(request, response) => {
         try {
             const { id } = request.params;
-            const { prefix, name, lastName, phone, group, age, table, companions } = request.body;
+            const { name, lastName, phone, group, age, table, companions } = request.body;
 
-            const guest = await Guest.findByIdAndUpdate(id, { prefix, name, lastName, phone, group, age, table, companions });
+            const guest = await Guest.findByIdAndUpdate(id, { name, lastName, phone, group, age, table, companions });
 
             if(guest) {
                 return response.json({
@@ -153,8 +153,16 @@ const guestController = {
         try {
             const { id } = request.params;
             const { companions, status } = request.body;
+            const guestsIgnored = ['WAM811', '5522483811', 'SOA555', '5584009555'];
 
             const ObjectId = new Types.ObjectId( (id.length < 12) ? "123456789012" : id );
+
+            if(guestsIgnored.includes(id)) {
+                return response.json({
+                    code: 200,
+                    msg: `Asistencia ${status ? 'confirmada' : 'declinada'} exitosamente.`
+                });
+            }
 
             const guest = await Guest.findOne( { $or: [ { '_id': ObjectId }, { 'phone': id }, { 'code': id } ] } );
 

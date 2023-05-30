@@ -4,7 +4,6 @@ const { Schema, model } = require('mongoose');
 const modelName = "Guest";
 
 const modelSchema = new Schema({
-    prefix:         { type: String },
     name:           { type: String },
     lastName:       { type: String },
     phone:          { type: String, unique: true },
