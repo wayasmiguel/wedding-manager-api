@@ -27,7 +27,7 @@ class Server{
 
         this.app.use((request, response, next) => {
             const origin = request.headers.origin || request.headers.host || "";
-            const allowedOrigins = ["https://aleymiguel.netlify.app", "aleymiguel.netlify.app", "https://aleymiguel.com.mx", "aleymiguel.com.mx"];
+            const allowedOrigins = ["https://aleymiguel.netlify.app", "aleymiguel.netlify.app", "https://aleymiguel.com.mx", "aleymiguel.com.mx", "https://dev.aleymiguel.com.mx", "dev.aleymiguel.com.mx"];
             const allowedIpList = process.env.ALLOWED_IP_LIST || [];
 
             response.header('Access-Control-Allow-Origin', '*');

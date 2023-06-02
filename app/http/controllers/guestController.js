@@ -226,6 +226,12 @@ const guestController = {
     },
     restartConfirmation: async(_, response) => {
         try {
+
+            return response.json({
+                code: 202,
+                msg: `No se puede reiniciar la asistencia porque ya hay invitados confirmados.`
+            });
+
             const guests = await Guest.find();
 
             if(guests) {
@@ -238,7 +244,7 @@ const guestController = {
                     status: 1
                 };
 
-                await Guest.updateMany({}, { $set: { 'confirmation.firstFilter': defaultData, 'confirmation.secondFilter': defaultData } });
+                // await Guest.updateMany({}, { $set: { 'confirmation.firstFilter': defaultData, 'confirmation.secondFilter': defaultData } });
 
                 return response.json({
                     code: 200,
