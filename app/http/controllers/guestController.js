@@ -2,6 +2,7 @@
 
 const Guest = require("../models/Guest");
 const { Types } = require("mongoose");
+const GoogleSpreedSheet = require('../helpers/GoogleSpreedSheet');
 
 const firstFilter = {
     startDate : new Date("2023-05-30").getTime(),
@@ -17,6 +18,25 @@ const isDateBetWeen  = (startDate, endDate) => {
     const dateValue = new Date().getTime();
 
     return dateValue >= startDate && dateValue <= endDate;
+}
+
+const getStage = {
+    'firstFilter': {
+        stage: 'Primer_Filtro',
+        adults: 'PF_Adultos',
+        children: 'PF_Niños'
+    },
+    'secondFilter': {
+        stage: 'Segundo_Filtro',
+        adults: 'SF_Adultos',
+        children: 'SF_Niños'
+    }
+}
+
+const statusToString = {
+    0: 'Cancelada',
+    1: 'Pendiente',
+    2: 'Confirmada'
 }
 
 const guestController = {
@@ -203,6 +223,15 @@ const guestController = {
                     companions,
                     status
                 }} });
+                
+                await GoogleSpreedSheet.update({
+                    code: guest.code,
+                    data: {
+                        [getStage[filterStage].stage]: statusToString[status],
+                        [getStage[filterStage].adults]: companions.adults,
+                        [getStage[filterStage].children]: companions.children
+                    }
+                });
 
                 return response.json({
                     code: 200,
