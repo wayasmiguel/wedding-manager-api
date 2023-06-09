@@ -10,31 +10,33 @@ const _axs = axios.create({
 })
 
 const GoogleSpreadSheets = {
-  create: async ()  => {
-
+  create: async (payload)  => {
+    try {
+      await _axs.post(`?sheet=Invitados`, payload.data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   },
   read: async () => {
     try {
-      const response = await _axs.get('?sheet=Invitados');
-
-      return response;
-    
+      await _axs.get('?sheet=Invitados');
     } catch (error) {
       console.error('Error:', error);
     }
   },
   update: async (payload) => {
     try {
-      const response = await _axs.patch(`code/${payload.code}?sheet=Invitados`, payload.data);
-
-      return response;
-    
+      await _axs.patch(`code/${payload.code}?sheet=Invitados`, payload.data);
     } catch (error) {
       console.error('Error:', error);
     }
   },
-  delete: async () => {
-
+  delete: async (payload) => {
+    try {
+      await _axs.delete(`code/${payload.code}?sheet=Invitados`);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
 }
 

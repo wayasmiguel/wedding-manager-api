@@ -46,17 +46,47 @@ const guestController = {
 
             const code = (lastName.split(" ")[0].substring(0, 2) + name.split(" ")[0].substring(0, 1) + phone.substring(phone.length - 3)).toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-            await Guest.create({ name, lastName, phone, code, group, age, table, companions });
+            const guest = await Guest.create({ name, lastName, phone, code, group, age, table, companions });
+
+            await GoogleSpreedSheet.create({
+                data: {
+                    'Nombre(s)': name,
+                    'Apellidos': lastName,
+                    'Teléfono': phone,
+                    'code': code,
+                    'Grupo': group,
+                    'Mesa': table,
+                    'Adultos': companions.adults,
+                    'Niños': companions.children,
+                    'Primer_Filtro': 'Pendiente',
+                    'PF_Adultos': 0,
+                    'PF_Niños': 0,
+                    'Segundo_Filtro': 'Pendiente',
+                    'SF_Adultos': 0,
+                    'SF_Niños': 0,
+                }
+            });
 
             return response.json({
                 code: 200,
-                msg: "Invitado creado exitosamente."
+                msg: "Invitado creado exitosamente.",
+                guest
             });
         }
         catch(error) {
+            let errorMSG = null;
+
+            if(error.message.search('phone_1') > 0) {
+                errorMSG = 'El número de teléfono ya existe.'
+            }
+
+            if(error.message.search('code_1') > 0) {
+                errorMSG = 'El código de invitado ya existe.'
+            }
+
             return response.json({
                 code: 500,
-                msg: "Ha ocurrido un error al tratar de crear un invitado.",
+                msg: errorMSG || "Ha ocurrido un error al tratar de crear un invitado.",
                 error: error.message
             });
         }
@@ -142,14 +172,37 @@ const guestController = {
             const { id } = request.params;
             const { name, lastName, phone, group, age, table, companions } = request.body;
 
+            const currentGuest = await Guest.findById(id);
+
             const code = (lastName.split(" ")[0].substring(0, 2) + name.split(" ")[0].substring(0, 1) + phone.substring(phone.length - 3)).toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-            const guest = await Guest.findByIdAndUpdate(id, { name, lastName, phone, code, group, age, table, companions });
+            const guest = await Guest.findByIdAndUpdate(id, { name, lastName, phone, code, group, age, table, companions }, { new: true });
+
+            await GoogleSpreedSheet.update({
+                code: currentGuest.code,
+                data: {
+                    'Nombre(s)': name,
+                    'Apellidos': lastName,
+                    'Teléfono': phone,
+                    'code': code,
+                    'Grupo': group,
+                    'Mesa': table,
+                    'Adultos': companions.adults,
+                    'Niños': companions.children,
+                    'Primer_Filtro': statusToString[guest.confirmation.firstFilter.status],
+                    'PF_Adultos': 0,
+                    'PF_Niños': 0,
+                    'Segundo_Filtro': statusToString[guest.confirmation.secondFilter.status],
+                    'SF_Adultos': 0,
+                    'SF_Niños': 0,
+                }
+            });
 
             if(guest) {
                 return response.json({
                     code: 200,
-                    msg: "Invitado actualizado exitosamente."
+                    msg: "Invitado actualizado exitosamente.",
+                    guest
                 });
             }
             else {
@@ -160,9 +213,19 @@ const guestController = {
             }
         }
         catch(error) {
+            let errorMSG = null;
+
+            if(error.message.search('phone_1') > 0) {
+                errorMSG = 'El número de teléfono ya existe.'
+            }
+
+            if(error.message.search('code_1') > 0) {
+                errorMSG = 'El código de invitado ya existe.'
+            }
+
             return response.json({
                 code: 500,
-                msg: "Ha ocurrido un error al tratar de actualizar un invitado.",
+                msg: errorMSG || "Ha ocurrido un error al tratar de actualizar un invitado.",
                 error: error.message
             });
         }
@@ -171,9 +234,15 @@ const guestController = {
         try {
             const { id } = request.params;
 
-            const guest = await Guest.findByIdAndRemove(id);
+            const guest = await Guest.findById(id);
+
+            await GoogleSpreedSheet.delete({
+                code: guest.code
+            });
 
             if(guest) {
+                await Guest.findByIdAndRemove(id);
+
                 return response.json({
                     code: 200,
                     msg: "Invitado eliminado exitosamente."
