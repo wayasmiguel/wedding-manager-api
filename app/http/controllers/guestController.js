@@ -91,7 +91,7 @@ const guestController = {
             });
         }
     },
-    get: async(request, response) => {     
+    get: async(request, response) => { 
         try {
             const { id } = request.params;
 
@@ -136,12 +136,14 @@ const guestController = {
 
                     // guest.stage = guest.confirmation.secondFilter.status != 1 ? 2 : guest.confirmation.firstFilter.status != 1 ? 1 : 0;
 
-                    const { confirmation, group, age, table, createdAt, updatedAt, _id, __v, ...dataFiltered } = guest;
+
+                    const { confirmation, group, age, table, attendance, createdAt, updatedAt, _id, __v, ...dataFiltered } = guest;
                     
                     return response.json({
                         code: 200,
                         guest: dataFiltered
                     });
+
                 }
                 else {
                     return response.json({
@@ -322,6 +324,78 @@ const guestController = {
             });
         }
     },
+    getDataByQR: async(request, response) => {
+        try {
+            const { id } = request.params;
+
+            if(id) {
+                const ObjectId = new Types.ObjectId( (id.length < 12) ? "123456789012" : id );
+    
+                const guest = await Guest.findOne( { $or: [ { '_id': ObjectId }, { 'phone': id }, { 'code': id } ] } );
+    
+                if(guest) {                    
+                    return response.json({
+                        code: 200,
+                        guest
+                    });
+                }
+                else {
+                    return response.json({
+                        code: 404,
+                        msg: "Invitado no encontrado."
+                    });
+                }
+            }
+            else {
+                const guests = await Guest.find();
+
+                return response.json({
+                    code: 200,
+                    guests
+                });
+            }
+        }
+        catch(error) {
+            return response.json({
+                code: 500,
+                msg: "Ha ocurrido un error al tratar de obtener un invitado.",
+                error: error.message
+            });
+        }
+    },
+    confirmAttendance: async(request, response) => {
+        try {
+            const { id } = request.params;
+            // const guestsIgnored = ['WAM811', '5522483811', 'SOA555', '5584009555'];
+
+            const ObjectId = new Types.ObjectId( (id.length < 12) ? "123456789012" : id );
+
+            let guest = await Guest.findOne( { $or: [ { '_id': ObjectId }, { 'phone': id }, { 'code': id } ] } );
+
+            if(guest) {
+                guest = await Guest.findByIdAndUpdate(guest._id, { $set: { 'attendance': true } }, { new: true });
+
+                return response.json({
+                    code: 200,
+                    msg: `Asistencia confirmada exitosamente.`,
+                    guest
+                });
+            }
+            else {
+                return response.json({
+                    code: 404,
+                    msg: "Invitado no encontrado."
+                });
+            }
+        }
+        catch(error) {
+            return response.json({
+                code: 500,
+                msg: "Ha ocurrido un error al tratar de confirmar la asistencia.",
+                error: error.message
+            });
+        }
+    },
     restartConfirmation: async(_, response) => {
         try {
 
@@ -360,6 +434,23 @@ const guestController = {
             return response.json({
                 code: 500,
                 msg: "Ha ocurrido un error al tratar de reiniciar la asistencia.",
+                error: error.message
+            });
+        }
+    },
+    test: async(_, response) => {
+        try {
+            await Guest.updateMany({}, { $set: { 'attendance': false } });
+
+            return response.json({
+                code: 202,
+                msg: `Datos sincronizados en todos los invitados.`
+            });
+        }
+        catch(error) {
+            return response.json({
+                code: 500,
+                msg: "Ha ocurrido un error al tratar de sincronizar los datos en todos los invitados.",
                 error: error.message
             });
         }

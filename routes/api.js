@@ -29,7 +29,10 @@ route.group('/guest', (guest) => {
     guest.put('/:id', guestController.update);
     guest.delete('/:id', guestController.delete);
     guest.post('/confirm/:id', guestController.confirm);
+    guest.get('/QR/:id', guestController.getDataByQR);
+    guest.post('/confirmAttendance/:id', guestController.confirmAttendance);
     guest.patch('/restart-confirmation', guestController.restartConfirmation);
+    guest.patch('/test', guestController.test);
 });
 
 //Settings routes

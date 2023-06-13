@@ -52,6 +52,7 @@ const modelSchema = new Schema({
         }
     },
     message:        { type: String },
+    attendance:     { type: Boolean, default: false }
 }, 
 { 
     collection: modelName,
