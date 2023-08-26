@@ -24,12 +24,14 @@ const getStage = {
     'firstFilter': {
         stage: 'Primer_Filtro',
         adults: 'PF_Adultos',
-        children: 'PF_Niños'
+        children: 'PF_Niños',
+        companionsName: 'Nombre_Invitados_Adultos'
     },
     'secondFilter': {
         stage: 'Segundo_Filtro',
         adults: 'SF_Adultos',
-        children: 'SF_Niños'
+        children: 'SF_Niños',
+        companionsName: 'Nombre_Invitados_Adultos'
     }
 }
 
@@ -134,7 +136,7 @@ const guestController = {
                         });
                     }
 
-                    // guest.stage = guest.confirmation.secondFilter.status != 1 ? 2 : guest.confirmation.firstFilter.status != 1 ? 1 : 0;
+                    guest.stage = guest.confirmation.secondFilter.status != 1 ? 2 : guest.confirmation.firstFilter.status != 1 ? 1 : 0;
 
 
                     const { confirmation, group, age, table, attendance, createdAt, updatedAt, _id, __v, ...dataFiltered } = guest;
@@ -268,7 +270,7 @@ const guestController = {
     confirm: async(request, response) => {
         try {
             const { id } = request.params;
-            const { companions, status } = request.body;
+            const { companions, status, companionsName } = request.body;
             const guestsIgnored = ['WAM811', '5522483811', 'SOA555', '5584009555'];
 
             const ObjectId = new Types.ObjectId( (id.length < 12) ? "123456789012" : id );
@@ -292,7 +294,8 @@ const guestController = {
                 await Guest.findByIdAndUpdate(guest._id, { $set: { [`confirmation.${filterStage}`]: {
                     date: Date.now(),
                     companions,
-                    status
+                    status,
+                    companionsName
                 }} });
                 
                 await GoogleSpreedSheet.update({
@@ -300,7 +303,8 @@ const guestController = {
                     data: {
                         [getStage[filterStage].stage]: statusToString[status],
                         [getStage[filterStage].adults]: companions.adults,
-                        [getStage[filterStage].children]: companions.children
+                        [getStage[filterStage].children]: companions.children,
+                        [getStage[filterStage].companionsName]: companionsName,
                     }
                 });
 

@@ -34,7 +34,8 @@ const modelSchema = new Schema({
                     type: Number,
                     default: 0
                 }
-            }
+            },
+            companionsName: { type: String, default: "" }
         },
         secondFilter: {
             date: { type: Date },
@@ -48,7 +49,8 @@ const modelSchema = new Schema({
                     type: Number,
                     default: 0
                 }
-            }
+            },
+            companionsName: { type: String, default: "" }
         }
     },
     message:        { type: String },
